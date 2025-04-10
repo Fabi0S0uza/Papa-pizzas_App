@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Campo para adicionar pizzaria -->
+        <Spinner
+            android:id="@+id/spinnerPizzarias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/edtNomePizzaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome da Pizzaria" />
+
+        <Button
+            android:id="@+id/btnAdicionarPizzaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Adicionar Pizzaria"
+            android:layout_marginTop="8dp" />
+
+        <!-- Spinner para selecionar pizzarias -->
+
+        <!-- Campos para adicionar cupons -->
+
+        <Button
+            android:id="@+id/btnDeletarPizzaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Deletar Pizzaria" />
+
+        <EditText
+            android:id="@+id/edtCodigoCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Código do Cupom"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/edtDescontoCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Desconto (%)"
+            android:layout_marginTop="8dp"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/spinnerCupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnAdicionarCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Adicionar Cupom"
+            android:layout_marginTop="8dp" />
+
+        <!-- Spinner para selecionar cupons -->
+
+        <Button
+            android:id="@+id/btnDeletarCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deletar Cupom"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>
