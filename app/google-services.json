@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "27060117778",
+    "firebase_url": "https://papapizza-3c41c-default-rtdb.firebaseio.com",
+    "project_id": "papapizza-3c41c",
+    "storage_bucket": "papapizza-3c41c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27060117778:android:bb095661f4f25e0d3713cb",
+        "android_client_info": {
+          "package_name": "br.com.estudos.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27060117778-sbpb4s3rvd68qh7kv81tuhgpv574d0es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw0s_HItwYTisS3befp5AObnZelC5BBzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27060117778-sbpb4s3rvd68qh7kv81tuhgpv574d0es.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27060117778:android:34a750cb7701a54e3713cb",
+        "android_client_info": {
+          "package_name": "br.com.estudos.projeto_papapiza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27060117778-sbpb4s3rvd68qh7kv81tuhgpv574d0es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw0s_HItwYTisS3befp5AObnZelC5BBzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27060117778-sbpb4s3rvd68qh7kv81tuhgpv574d0es.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

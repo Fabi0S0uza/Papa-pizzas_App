@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gerenciar Pizzarias e Cupons"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Seção: Pizzaria -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pizzarias"
+            android:textStyle="bold"
+            android:textColor="#444"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerPizzarias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/edtNomePizzaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite o nome da pizzaria"
+            android:inputType="textCapWords"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btnAdicionarPizzaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#272525"
+            android:text="Adicionar Pizzaria"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnDeletarPizzaria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deletar Pizzaria"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#B00020"
+            android:textColor="@android:color/white" />
+
+        <!-- Seção: Cupons -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cupons"
+            android:textStyle="bold"
+            android:textColor="#444"
+            android:layout_marginTop="24dp" />
+
+        <EditText
+            android:id="@+id/edtCodigoCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Código do cupom"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/edtValidadeCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Dias de Validade do cupom"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtDescontoCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Desconto (%)"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnAdicionarCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#272525"
+            android:text="Adicionar Cupom"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnDeletarCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deletar Cupom"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#B00020"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</ScrollView>
