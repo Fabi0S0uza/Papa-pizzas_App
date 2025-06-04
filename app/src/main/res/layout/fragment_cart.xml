@@ -38,118 +38,195 @@
             tools:srcCompat="@drawable/logo" />
     </LinearLayout>
 
-
-    <Spinner
-        android:id="@+id/spinnerPizzarias"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:contentDescription="Selecionar Pizzaria"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <Spinner
-        android:id="@+id/spinnerCupons"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:contentDescription="Selecionar Cupom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewCarrinho"
-        android:layout_width="373dp"
-        android:layout_height="394dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="Lista de produtos no carrinho"
-        android:paddingTop="8dp"
-        app:layout_constraintBottom_toTopOf="@id/totalTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCupons"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Spinner
-        android:id="@+id/metodoPag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-
-        app:layout_constraintBottom_toTopOf="@+id/finalizarCompraButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalTextView"
-        app:layout_constraintVertical_bias="0.666" />
-
-    <TextView
-        android:id="@+id/totalTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:contentDescription="Valor total da compra"
-        android:padding="8dp"
-        android:text="Total: R$ 0.00"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerViewCarrinho" />
-
-    <Button
-        android:id="@+id/finalizarCompraButton"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="30dp"
-        android:backgroundTint="@color/myRed"
-        android:contentDescription="Botão para finalizar a compra"
-        android:padding="10dp"
-        android:text="Finalizar Compra"
-        android:textColor="@android:color/white"
+    <ScrollView
+        android:id="@+id/cart_scroll_view" android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/totalTextView"
-        app:layout_constraintVertical_bias="0.688" />
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:text="Selecione a Pizzaria"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topBar" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cart_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Cupons Disponiveis"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerPizzarias" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/alexandria"
+                android:text="Selecione a Pizzaria:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="Forma de Pagamento:"
-        app:layout_constraintBottom_toTopOf="@+id/metodoPag"
-        app:layout_constraintEnd_toStartOf="@+id/totalTextView"
-        app:layout_constraintHorizontal_bias="0.0"
+            <Spinner
+                android:id="@+id/spinnerPizzarias"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:autofillHints="teste"
+                android:contentDescription="Selecionar Pizzaria"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/alexandria"
+                android:text="Cupons Disponíveis:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerPizzarias" />
+
+            <Spinner
+                android:id="@+id/spinnerCupons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:autofillHints="teste"
+                android:contentDescription="Selecionar Cupom"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <TextView
+                android:id="@+id/cartItemsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/alexandria"
+                android:text="Itens no Carrinho:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinnerCupons" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCarrinho"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:contentDescription="Lista de produtos no carrinho"
+                android:paddingTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cartItemsTitle" />
+
+            <TextView
+                android:id="@+id/totalTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:contentDescription="Valor total da compra"
+                android:fontFamily="@font/alexandria"
+                android:padding="8dp"
+                android:text="Total: R$ 0.00"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewCarrinho" />
+
+            <TextView
+                android:id="@+id/textViewEndereco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/alexandria"
+                android:text="Endereço de Entrega:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/totalTextView" />
+
+            <EditText
+                android:id="@+id/editTextEndereco"
+                style="@android:style/Widget.Holo.Light.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Digite seu endereço completo"
+                android:inputType="textPostalAddress|textCapWords"
+                android:minHeight="48dp"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewEndereco" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="210dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/alexandria"
+                android:text="Forma de Pagamento:"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextEndereco" />
+
+            <Spinner
+                android:id="@+id/metodoPag"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <Button
+                android:id="@+id/finalizarCompraButton"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="50dp"
+                android:backgroundTint="@color/myRed"
+                android:contentDescription="Botão para finalizar a compra"
+                android:padding="10dp"
+                android:text="Finalizar Compra"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/metodoPag" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/emptyCartImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/baseline_remove_shopping_cart_24"
+        android:contentDescription="Carrinho Vazio"
+        android:visibility="gone" app:layout_constraintTop_toBottomOf="@+id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewCarrinho"
-        app:layout_constraintVertical_bias="0.783" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.35" /> <TextView
+    android:id="@+id/emptyCartTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Seu carrinho está vazio!"
+    android:textSize="18sp"
+    android:textColor="@android:color/darker_gray"
+    android:visibility="gone" android:layout_marginTop="8dp"
+    app:layout_constraintTop_toBottomOf="@+id/emptyCartImageView"
+    app:layout_constraintStart_toStartOf="@+id/emptyCartImageView"
+    app:layout_constraintEnd_toEndOf="@+id/emptyCartImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

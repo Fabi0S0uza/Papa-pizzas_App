@@ -33,7 +33,7 @@
             android:id="@+id/pizzaPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preço"
+            android:text="Preço:"
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp" />
 
@@ -47,17 +47,17 @@
 
             <Button
                 android:id="@+id/buttonAddToCart"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="Adicionar Carrinho" />
+                android:text="Adicionar" />
 
             <Button
                 android:id="@+id/buttonRemoveFromCart"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="Remover Carrinho" /> <!-- Começa invisível e só aparece se a pizza estiver no carrinho -->
+                android:text="Remover " /> <!-- Começa invisível e só aparece se a pizza estiver no carrinho -->
 
         </LinearLayout>
 

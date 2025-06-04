@@ -59,21 +59,34 @@ public class Register extends AppCompatActivity {
         String confirmPassword = confirmPasswordEditText.getText().toString();
 
         // Verificar se todos os campos foram preenchidos
+        // Verificar se todos os campos foram preenchidos
         if (name.isEmpty() || cpf.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(Register.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Verificar se as senhas coincidem
+// Verificar tamanho da senha
+
         if (!password.equals(confirmPassword)) {
             textSenhaIncorreta.setVisibility(View.VISIBLE);
             textSenhaIncorreta.setText("As senhas não coincidem");
             textSenhaIncorreta2.setText("As senhas não coincidem");
-
             return;
         } else {
-            textSenhaIncorreta.setVisibility(View.GONE); // Esconde o aviso se senhas estiverem corretas
+            textSenhaIncorreta.setVisibility(View.GONE); // Oculta os avisos
+            textSenhaIncorreta2.setText(""); // Limpa o texto do segundo aviso
         }
+
+        if (password.length() < 6 || confirmPassword.length() < 6) {
+            textSenhaIncorreta.setVisibility(View.VISIBLE);
+            textSenhaIncorreta.setText("A senha deve conter no mínimo 6 caracteres");
+            textSenhaIncorreta2.setText("A senha deve conter no mínimo 6 caracteres");
+            return;
+        }
+
+// Verificar se as senhas coincidem
+
+
 
         // Criar usuário no Firebase Authentication
         mAuth.createUserWithEmailAndPassword(email, password)

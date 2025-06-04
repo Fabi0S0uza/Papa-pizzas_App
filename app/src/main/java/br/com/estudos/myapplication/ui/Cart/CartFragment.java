@@ -13,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog; // Adicione esta importação para o AlertDialog
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,7 +32,6 @@ import br.com.estudos.myapplication.PizzaAdapter;
 import br.com.estudos.myapplication.R;
 import br.com.estudos.myapplication.databinding.FragmentCartBinding;
 import br.com.estudos.myapplication.ui.Cart.Carrinho;
-import br.com.estudos.myapplication.ui.dashboard.DashboardFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,18 +44,30 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
     private PizzaAdapter adapter;
     private TextView totalTextView;
     private Spinner spinnerPizzarias, spinnerCupons, metodoPag;
+    private EditText editTextEndereco;
     private FirebaseFirestore db;
     private Button btn_Finalizar;
+
+    private ImageView emptyCartImageView; // Nova variável para a imagem de carrinho vazio
+    private TextView emptyCartTextView;   // Nova variável para o texto de carrinho vazio
+    private TextView cartItemsTitle;      // Variável para o título "Itens no Carrinho"
+
+    // Seus outros TextViews de título e os Spinners e EditText
+    private TextView textView2Pizzaria;
+    private TextView textView3Cupons;
+    private TextView textViewEndereco;
+    private TextView textView4Pagamento;
+
 
     private List<String> listaPagamentos = new ArrayList<>();
     private List<String> nomesPizzarias = new ArrayList<>();
     private Map<String, String> pizzariasMap = new HashMap<>();
     private List<String> listaCupons = new ArrayList<>();
     private Map<String, String> cuponsMap = new HashMap<>();
-    private Map<String, String> cuponsDescontos = new HashMap<>(); // Novo mapa para armazenar os descontos
-    private double totalCarrinho = 0.0; // Valor do carrinho antes do desconto
-    private double descontoCupom = 0.0; // Valor do desconto aplicado
-    private String cupomUsadoCodigo = null; // Código do cupom usado na compra
+    private Map<String, String> cuponsDescontos = new HashMap<>();
+    private double totalCarrinho = 0.0;
+    private double descontoCupom = 0.0;
+    private String cupomUsadoCodigo = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,38 +77,51 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
 
         recyclerView = binding.recyclerViewCarrinho;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Inicialize os novos elementos de UI
+        emptyCartImageView = binding.emptyCartImageView;
+        emptyCartTextView = binding.emptyCartTextView;
+        cartItemsTitle = binding.cartItemsTitle; // Inicialize o título "Itens no Carrinho"
+
+        // Inicialize os Spinners, EditText e Button Finalizar
         spinnerPizzarias = binding.spinnerPizzarias;
         spinnerCupons = binding.spinnerCupons;
         metodoPag = binding.metodoPag;
+        editTextEndereco = binding.editTextEndereco;
         btn_Finalizar = binding.finalizarCompraButton;
+        totalTextView = binding.totalTextView;
+
+        // Inicialize os outros TextViews de título
+        textView2Pizzaria = binding.textView2;
+        textView3Cupons = binding.textView3;
+        textViewEndereco = binding.textViewEndereco;
+        textView4Pagamento = binding.textView4;
+
+
         listaPagamentos.add("Cartão de Crédito");
         listaPagamentos.add("Cartão de Débito");
         listaPagamentos.add("Pix");
         listaPagamentos.add("Dinheiro");
 
-        // Cria um adaptador para o Spinner
         ArrayAdapter<String> adapterPag = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listaPagamentos);
         adapterPag.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         metodoPag.setAdapter(adapterPag);
 
-        totalTextView = binding.totalTextView;
-
-        // Recupera as pizzas do carrinho
         List<Pizza> pizzasCarrinho = Carrinho.getInstance().getPizzas();
         db = FirebaseFirestore.getInstance();
 
         carregarPizzarias();
         selecionarPag();
 
-        // Configura o adaptador com o listener para atualizar o total
         adapter = new PizzaAdapter(getContext(), false, true, this);
         adapter.setPizzaList(pizzasCarrinho);
         recyclerView.setAdapter(adapter);
 
-        // Define o total inicial do carrinho
-        atualizarTotal();
+        // Chame updateCartVisibility() uma vez no início para definir o estado inicial
+        updateCartVisibility();
 
-        // Listener para carregar cupons ao escolher uma pizzaria
+        atualizarTotal(); // Define o total inicial do carrinho
+
         spinnerPizzarias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -106,7 +132,6 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Listener para aplicar desconto ao selecionar um cupom
         spinnerCupons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -117,10 +142,7 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Listener do botão de finalizar
-        // Listener do botão de finalizar
         btn_Finalizar.setOnClickListener(v -> {
-            // Verifica se o usuário está logado e se o carrinho tem itens
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user == null) {
                 Toast.makeText(getContext(), "Usuário não autenticado! Redirecionando para login...", Toast.LENGTH_SHORT).show();
@@ -135,20 +157,25 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
                 return;
             }
 
-            // Exibe o pedido de confirmação antes de finalizar a compra
+            String endereco = editTextEndereco.getText().toString().trim();
+            if (endereco.isEmpty()) {
+                Toast.makeText(getContext(), "Por favor, informe seu endereço de entrega!", Toast.LENGTH_SHORT).show();
+                editTextEndereco.requestFocus();
+                return;
+            }
+
             new AlertDialog.Builder(getContext())
                     .setTitle("Confirmar Compra")
                     .setMessage("Você tem certeza que deseja finalizar o pedido?")
                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            salvarCompra(); // Salva a compra se o usuário confirmar
+                            salvarCompra();
                         }
                     })
-                    .setNegativeButton("Cancelar", null) // Não faz nada se o usuário cancelar
+                    .setNegativeButton("Cancelar", null)
                     .show();
         });
-
 
         return root;
     }
@@ -156,31 +183,75 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null; // Desvincula o View Binding
+        binding = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Não há recursos específicos que pareçam precisar ser liberados neste Fragment no momento.
     }
 
     @Override
     public void onCartUpdated() {
         atualizarTotal();
+        updateCartVisibility(); // Chame aqui para atualizar a visibilidade
     }
 
     public void atualizarTotal() {
         totalCarrinho = Carrinho.getInstance().calcularCarrinho();
         double totalComDesconto = totalCarrinho - descontoCupom;
-        if (totalComDesconto < 0) totalComDesconto = 0; // Evita valores negativos
+        if (totalComDesconto < 0) totalComDesconto = 0;
 
         if (descontoCupom > 0) {
-            totalTextView.setText(String.format("Total: R$ %.2f (-R$ %.2f de desconto)", totalComDesconto, descontoCupom));
+            totalTextView.setText(String.format("Total: R$ %.2f (R$ %.2f de desconto)", totalComDesconto, descontoCupom));
         } else {
             totalTextView.setText(String.format("Total: R$ %.2f", totalComDesconto));
         }
     }
+
+    // --- NOVO MÉTODO PARA GERENCIAR A VISIBILIDADE ---
+    private void updateCartVisibility() {
+        boolean isCartEmpty = Carrinho.getInstance().getPizzas().isEmpty();
+
+        if (isCartEmpty) {
+            // Oculta o RecyclerView e todos os controles de compra
+            recyclerView.setVisibility(View.GONE);
+            cartItemsTitle.setVisibility(View.GONE); // Oculta o título "Itens no Carrinho"
+            spinnerPizzarias.setVisibility(View.GONE);
+            textView2Pizzaria.setVisibility(View.GONE);
+            spinnerCupons.setVisibility(View.GONE);
+            textView3Cupons.setVisibility(View.GONE);
+            totalTextView.setVisibility(View.GONE);
+            editTextEndereco.setVisibility(View.GONE);
+            textViewEndereco.setVisibility(View.GONE);
+            metodoPag.setVisibility(View.GONE);
+            textView4Pagamento.setVisibility(View.GONE);
+            btn_Finalizar.setVisibility(View.GONE);
+
+            // Mostra a imagem e o texto de carrinho vazio
+            emptyCartImageView.setVisibility(View.VISIBLE);
+            emptyCartTextView.setVisibility(View.VISIBLE);
+        } else {
+            // Mostra o RecyclerView e todos os controles de compra
+            recyclerView.setVisibility(View.VISIBLE);
+            cartItemsTitle.setVisibility(View.VISIBLE); // Mostra o título "Itens no Carrinho"
+            spinnerPizzarias.setVisibility(View.VISIBLE);
+            textView2Pizzaria.setVisibility(View.VISIBLE);
+            spinnerCupons.setVisibility(View.VISIBLE);
+            textView3Cupons.setVisibility(View.VISIBLE);
+            totalTextView.setVisibility(View.VISIBLE);
+            editTextEndereco.setVisibility(View.VISIBLE);
+            textViewEndereco.setVisibility(View.VISIBLE);
+            metodoPag.setVisibility(View.VISIBLE);
+            textView4Pagamento.setVisibility(View.VISIBLE);
+            btn_Finalizar.setVisibility(View.VISIBLE);
+
+            // Oculta a imagem e o texto de carrinho vazio
+            emptyCartImageView.setVisibility(View.GONE);
+            emptyCartTextView.setVisibility(View.GONE);
+        }
+    }
+
 
     private void carregarPizzarias() {
         db.collection("pizzarias").get().addOnCompleteListener(task -> {
@@ -222,9 +293,8 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
                         cuponsMap.clear();
                         cuponsDescontos.clear();
 
-                        // Adiciona a opção "Sem desconto"
-                        listaCupons.add("Sem desconto");
-                        cuponsDescontos.put("Sem desconto", "0"); // Define desconto 0 para essa opção
+                        listaCupons.add("Nenhum Cupom Selecionado");
+                        cuponsDescontos.put("Nenhum Cupom Selecionado", "0");
 
                         db.collection("usuarios").document(userId).collection("cuponsUsados").get().addOnCompleteListener(usedTask -> {
                             List<String> usedCouponCodes = new ArrayList<>();
@@ -239,7 +309,7 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
                                 String desconto = document.getString("desconto");
                                 String id = document.getId();
 
-                                if (!usedCouponCodes.contains(codigo)) { // Check if the coupon is not used
+                                if (!usedCouponCodes.contains(codigo)) {
                                     cuponsMap.put(id, codigo);
                                     listaCupons.add(codigo);
                                     cuponsDescontos.put(codigo, desconto);
@@ -261,11 +331,11 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
         String cupomSelecionado = (String) spinnerCupons.getSelectedItem();
         if (cupomSelecionado == null) return;
 
-        if (cupomSelecionado.equals("Sem desconto")) {
+        if (cupomSelecionado.equals("Nenhum Cupom Selecionado") || cupomSelecionado.equals("Nenhum Cupom Selecionado")) { // Adicionado "Sem desconto"
             descontoCupom = 0;
-            cupomUsadoCodigo = null; // Reseta o código do cupom usado
+            cupomUsadoCodigo = null;
         } else {
-            cupomUsadoCodigo = cupomSelecionado; // Armazena o código do cupom usado
+            cupomUsadoCodigo = cupomSelecionado;
             String descontoStr = cuponsDescontos.get(cupomSelecionado);
             if (descontoStr != null) {
                 try {
@@ -307,8 +377,11 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
         String userId = user.getUid();
         String emailUsuario = user.getEmail();
         String metodoPagamento = (String) metodoPag.getSelectedItem();
+        String endereco = editTextEndereco.getText().toString().trim();
 
-        double valorFinal = 0;
+        double valorFinal = totalCarrinho - descontoCupom; // Use o total com desconto
+        if (valorFinal < 0) valorFinal = 0; // Garante que não seja negativo
+
         List<Map<String, Object>> itensComprados = new ArrayList<>();
 
         for (Pizza pizza : Carrinho.getInstance().getPizzas()) {
@@ -317,25 +390,22 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
             item.put("preco", pizza.getPreco());
             item.put("imagemUrl", pizza.getImagemUrl());
             itensComprados.add(item);
-            valorFinal += pizza.getPreco();
         }
 
         Map<String, Object> compra = new HashMap<>();
         compra.put("usuarioId", userId);
         compra.put("emailUsuario", emailUsuario);
         compra.put("metodoPagamento", metodoPagamento);
-        compra.put("valorTotal", valorFinal);
+        compra.put("endereco", endereco);
+        compra.put("valorTotal", valorFinal); // Agora usando o valor final com desconto
         compra.put("dataCompra", FieldValue.serverTimestamp());
         compra.put("itens", itensComprados);
 
-        // Adiciona o código do cupom usado, se houver
-        if (cupomUsadoCodigo != null) {
+        if (cupomUsadoCodigo != null && !cupomUsadoCodigo.equals("Sem desconto")) { // Verifica se um cupom foi realmente usado
             compra.put("cupomUsado", cupomUsadoCodigo);
-            // Adiciona o cupom usado à lista de cupons usados do usuário
             db.collection("usuarios").document(userId).collection("cuponsUsados").document(cupomUsadoCodigo)
-                    .set(new HashMap<>()) // Pode salvar apenas o ID do cupom
+                    .set(new HashMap<>())
                     .addOnSuccessListener(aVoid -> {
-                        // Cupom usado registrado com sucesso para o usuário
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "Erro ao registrar cupom usado: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -346,16 +416,14 @@ public class CartFragment extends Fragment implements PizzaAdapter.OnCartUpdateL
                 .add(compra)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(getContext(), "Compra registrada com sucesso!", Toast.LENGTH_SHORT).show();
-                    Carrinho.getInstance().esvaziarCarrinho(); // Esvazia o carrinho
-                    adapter.setPizzaList(new ArrayList<>()); // Atualiza o RecyclerView
-                    adapter.notifyDataSetChanged(); // Notifica mudança na UI
-                    atualizarTotal(); // Atualiza o total para R$ 0,00
-                    // Reseta o cupomUsadoCodigo após a compra
+                    Carrinho.getInstance().esvaziarCarrinho();
+                    adapter.setPizzaList(new ArrayList<>());
+                    adapter.notifyDataSetChanged();
+                    atualizarTotal();
+                    editTextEndereco.setText("");
                     cupomUsadoCodigo = null;
-                    // Recarrega os cupons para o spinner
                     carregarCupons();
-                    // Força a recarga dos cupons no DashboardFragment
-
+                    updateCartVisibility(); // Chamada importante aqui
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Erro ao registrar compra: " + e.getMessage(), Toast.LENGTH_SHORT).show();

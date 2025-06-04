@@ -128,24 +128,51 @@ public class NotificationsFragment extends Fragment {
             if (dataCompraObj instanceof Timestamp) {
                 timestamp = (Timestamp) dataCompraObj;
             } else if (dataCompraObj instanceof Map) {
+                // Se for um mapa, tentamos converter para Timestamp
                 Map<String, Object> timestampMap = (Map<String, Object>) dataCompraObj;
-                if (timestampMap.containsKey("_seconds")) {
+                if (timestampMap.containsKey("_seconds") && timestampMap.get("_seconds") instanceof Number) {
                     long seconds = ((Number) timestampMap.get("_seconds")).longValue();
+                    // Firebase Timestamp usa segundos, então multiplicamos por 1000 para milissegundos
                     timestamp = new Timestamp(new Date(seconds * 1000));
                 }
             }
 
             if (timestamp != null) {
                 Date date = timestamp.toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 holder.txtData.setText("Data: " + sdf.format(date));
             } else {
                 holder.txtData.setText("Data: Indisponível");
             }
 
-            // Exibir o nome da pizza
-            String nomePizza = (pedido.get("nomePizza") != null) ? pedido.get("nomePizza").toString() : "Desconhecido";
-            holder.txtNomePizza.setText("Pizza: " + nomePizza);
+            // --- INÍCIO DA ALTERAÇÃO PARA EXIBIR OS NOMES DAS PIZZAS ---
+            StringBuilder pizzasBuilder = new StringBuilder("Pizzas: ");
+            Object itensObj = pedido.get("itens");
+
+            if (itensObj instanceof List) {
+                List<Map<String, Object>> itens = (List<Map<String, Object>>) itensObj;
+                if (!itens.isEmpty()) {
+                    for (int i = 0; i < itens.size(); i++) {
+                        Map<String, Object> item = itens.get(i);
+                        // O nome da pizza está no campo "nome" dentro de cada item do array "itens"
+                        String nomePizza = (String) item.get("nome");
+                        if (nomePizza != null && !nomePizza.isEmpty()) {
+                            pizzasBuilder.append(nomePizza);
+                        } else {
+                            pizzasBuilder.append("Nome desconhecido");
+                        }
+                        if (i < itens.size() - 1) {
+                            pizzasBuilder.append(", "); // Adiciona vírgula entre os nomes
+                        }
+                    }
+                } else {
+                    pizzasBuilder.append("Nenhuma pizza no pedido.");
+                }
+            } else {
+                pizzasBuilder.append("Erro ao carregar pizzas.");
+            }
+            holder.txtNomePizza.setText(pizzasBuilder.toString());
+            // --- FIM DA ALTERAÇÃO ---
         }
 
         @Override
@@ -162,7 +189,7 @@ public class NotificationsFragment extends Fragment {
                 txtMetodo = itemView.findViewById(R.id.txtMetodo);
                 txtValor = itemView.findViewById(R.id.txtValor);
                 txtData = itemView.findViewById(R.id.txtData);
-                txtNomePizza = itemView.findViewById(R.id.txtNomePizza);
+                txtNomePizza = itemView.findViewById(R.id.txtNomePizza); // Certifique-se de que este ID existe no seu item_pedido.xml
             }
         }
     }

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/adlam_display</item>
+        <item>@font/agbalumo</item>
+        <item>@font/akatab_medium</item>
+        <item>@font/alexandria</item>
+        <item>@font/alkalami</item>
+        <item>@font/alkatra</item>
+        <item>@font/anton</item>
+        <item>@font/aoboshi_one</item>
+        <item>@font/krona_one</item>
         <item>@font/roboto_thin</item>
     </array>
 </resources>

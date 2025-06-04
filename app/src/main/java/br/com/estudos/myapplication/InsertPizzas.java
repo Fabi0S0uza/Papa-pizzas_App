@@ -48,10 +48,18 @@ public class InsertPizzas extends AppCompatActivity {
                 .add(pizza)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(InsertPizzas.this, "Pizza cadastrada com sucesso", Toast.LENGTH_SHORT).show();
+                    clearFields();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(InsertPizzas.this, "Erro ao cadastrar pizza", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void clearFields() {
+        nomeEditText.setText("");
+        precoEditText.setText("");
+        urlImagem.setText("");
+
     }
 
     // Deletar pizza

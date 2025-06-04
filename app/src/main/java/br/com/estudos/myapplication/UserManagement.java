@@ -4,58 +4,57 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.Toast; // Keep Toast for potential future use or debugging
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import br.com.estudos.myapplication.ui.Delete;
+// Removed: import br.com.estudos.myapplication.ui.home.HomeFragment; // HomeFragment is a Fragment, not an Activity
 
 public class UserManagement extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
-    private EditText user;
+    // Removed: private EditText user; // Not used in the provided code
     private Button btn_Cadastrar, btn_Deletar, btn_DeletarUser, btn_Cupom;
+    private ImageView logo; // Declare ImageView here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_management);
 
-        // Inicializa Firestore e FirebaseAuth
+        // Initialize Firestore and FirebaseAuth
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Inicializa os componentes da interface
+        // Initialize UI components
         btn_Cadastrar = findViewById(R.id.btn_Cadastrar);
-        btn_Deletar = findViewById(R.id.btn_Deletar);  // Botão para deletar produtos
-        btn_DeletarUser = findViewById(R.id.btn_DeletarUser); // Botão para deletar usuários
-        btn_Cupom = findViewById(R.id.btn_Cupom); //adicionar cupom
+        btn_Deletar = findViewById(R.id.btn_Deletar);  // Button to delete products
+        btn_DeletarUser = findViewById(R.id.btn_DeletarUser); // Button to delete users
+        btn_Cupom = findViewById(R.id.btn_Cupom); // Button to add coupon
+        logo = findViewById(R.id.logoAdm); // Initialize logo ImageView here
 
-
-
+        // Set OnClickListeners for buttons
         btn_DeletarUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(UserManagement.this, Delete.class);
                 startActivity(in);
             }
+        });
 
-        });   // Deleta usuário
         btn_Deletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(UserManagement.this, Delete.class);
                 startActivity(in);
             }
-        });    // Deleta produto
+        });
 
         btn_Cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +71,14 @@ public class UserManagement extends AppCompatActivity {
                 startActivity(in);
             }
         });
+
+        // Set OnClickListener for the logo ImageView
+        logo.setOnClickListener(view -> {
+            // Assuming MainActivity is the activity that hosts HomeFragment
+            // If not, you might need to adjust this to the correct main activity of your app.
+            Intent intent = new Intent(UserManagement.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Optional: finish this activity so user can't navigate back to it with back button
+        });
     }
-
-
-
-
-
-
-
 }
